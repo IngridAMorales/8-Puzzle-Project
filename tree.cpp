@@ -37,12 +37,13 @@ void display(TreeNode* node){
     int cols = sizeof(node->puzzle[0])/ sizeof(node->puzzle[0][0]);
 
     for(int i = 0; i < rows; i++){
+        cout<< "["; 
         for(int j = 0; j<cols; j++){
-           printf("%d ", node->puzzle[i][j]);
-           
+           printf(" %d ", node->puzzle[i][j]);
         }
-        printf("\n");
+        cout<< "]"<<endl; 
     }
+    printf("\n");
    //cout<<"h(n) = "<< root->cost<<endl; 
      
     /*
@@ -116,25 +117,27 @@ void operators(TreeNode* root){
             
             //edge case when (i,j)= (3,3)
            if(root->puzzle[i][j]==0 && j==(cols-1)&& i==(rows-1)){
-            
+   
             std::swap(moveLeft[i][j], moveLeft[i][j-1]);
             addChild(root, moveLeft); 
            
             std::swap(moveUp[i][j], moveUp[i-1][j]);
             addChild(root, moveUp); 
-            //return root->children; 
+           
            }
            //edge case when (i,j) = (0,0)
-           else if(root->puzzle[i][j]==0 && i==0){
+           else if(root->puzzle[i][j]==0 && i==0 && j==0){
+  
             std::swap(moveRight[i][j], moveRight[i][j+1]);
             addChild(root, moveRight); 
            
             std::swap(moveDown[i][j], moveDown[i+1][j]);
             addChild(root, moveDown);
-            //return root->children;
+
            }
-           //case when (0,3)
+           //case when (0,2)
            else if(root->puzzle[i][j]==0 && j==(cols-1) && i==0){
+          
             std::swap(moveLeft[i][j], moveLeft[i][j-1]);
             addChild(root, moveLeft); 
 
@@ -144,6 +147,7 @@ void operators(TreeNode* root){
            }
            //case when (3,0)
            else if(root->puzzle[i][j]==0 && j==0 && i==(rows-1)){
+     
             std::swap(moveRight[i][j], moveRight[i][j+1]);
             addChild(root, moveRight); 
 
@@ -162,7 +166,7 @@ void operators(TreeNode* root){
 
             std::swap(moveUp[i][j], moveUp[i-1][j]);
             addChild(root, moveUp); 
-            //return root->children;
+        
 
            }
            //case when (0, 1 or 2)
@@ -209,12 +213,11 @@ void operators(TreeNode* root){
             std::swap(moveDown[i][j], moveDown[i+1][j]);
             addChild(root, moveDown);
 
+            std::swap(moveRight[i][j], moveRight[i][j+1]);
+            addChild(root, moveRight); 
+
             std::swap(moveLeft[i][j], moveLeft[i][j-1]);
             addChild(root, moveLeft);  
-
-            std::swap(moveRight[i][j], moveRight[i][j+1]);
-            addChild(root, moveRight);     
-            //return root->children;
            }
         }
     
@@ -230,51 +233,53 @@ TreeNode* search(std::array<std::array<int,3>,3>& initial, std::array<std::array
     std::priority_queue<TreeNode*,std::vector<TreeNode*>,comp> q;  
     //making node 
     TreeNode* root = NewNode(initial, 0); 
-    root->cost = manhattanDistance(initial, final); 
+    //root->cost = manhattanDistance(initial, final); 
 
     //pushing node 
     q.push(root);
-    cout<<"root:"<<endl; 
-    display(q.top()); 
+   
     
-    
+    int max = q.size();  
+    int nodes = 1; 
+    int test = 0; 
     while(!q.empty()){
         TreeNode* min = q.top(); 
-
+        
         if(q.empty()){
             return nullptr; 
         }  
         q.pop(); 
         //Check for goal state
         if(min->puzzle == final){
-            cout<<"we have entered goal state"<<endl; 
-            cout<<"Found at depth "<<min->depth<< " with total cost of "<< min->cost +min->depth<<endl; 
+            cout<<"Solution depth was "<<min->depth<<endl; 
+            cout<<"Max queue size is "<< max<<endl; 
+            cout<<"Nodes expanded : "<< nodes<<endl;
+
             return min; 
         }
         else{       
-            
-            cout<<"we are creating children of"<<endl;
-            display(min); 
-            cout<<"with depth "<< min->depth<<endl; 
             operators(min); 
-            
             for(int i = 0; i < min->children.size(); i++){
-                
-                cout<<"Child "<<i<<endl;
-                
-                min->children.at(i)->cost = manhattanDistance(min->children.at(i)->puzzle, final); 
-               
-                display(min->children.at(i)); 
-                cout<<"f(n) = "<< min->children.at(i)->cost +min->children.at(i)->depth<<endl;
-                q.push(min->children.at(i)); 
-                
+                //min->children.at(i)->cost = manhattanDistance(min->children.at(i)->puzzle, final); 
+                q.push(min->children.at(i));   
+                nodes++; 
             } 
+            //q.pop();
+            if (q.size()> max){
+                max = q.size(); 
+            }
+            
 
-        }
-        //q.pop(); 
-       
-                   
+        } 
+         
+        cout<<"The best state to expand with a g(n) = "<<q.top()->depth<< " and h(n) = "<< q.top()->cost << " is... "<< endl;
+        display(q.top()); 
+
+     test++;     
     }
+    
+      
+   
     return q.top(); 
 } 
 
