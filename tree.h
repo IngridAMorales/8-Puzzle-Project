@@ -9,22 +9,21 @@
 struct TreeNode* NewNode(std::array<std::array<int,3>,3>& initial, int level); 
 void addChild(TreeNode* node, std::array<std::array<int,3>,3>& initial); 
 void display(TreeNode* root); 
-struct TreeNode* search(std::array<std::array<int,3>,3>& initial, std::array<std::array<int,3>,3>& final); 
+struct TreeNode* search(std::array<std::array<int,3>,3>& initial, std::array<std::array<int,3>,3>& final, int queueFunction); 
 void operators(TreeNode* node); 
 int misplacedTiles(std::array<std::array<int,3>,3>& initial, std::array<std::array<int,3>,3>& final);
 int manhattanDistance(std::array<std::array<int,3>,3>& initial, std::array<std::array<int,3>,3>& final); 
 
-
-
 struct TreeNode{ 
 
-    TreeNode* parent; 
     std::array<std::array<int,3>,3> puzzle;
     std::vector <TreeNode*> children; 
     int depth; 
     int cost; 
 
 };
+
+//comparison object for priority queue
 struct comp
 {
     bool operator()(const TreeNode* lhs, const TreeNode* rhs) const
