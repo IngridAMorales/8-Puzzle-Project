@@ -241,7 +241,7 @@ TreeNode* search(std::array<std::array<int,3>,3>& initial, std::array<std::array
    
     int max = q.size();  
     int nodes = 1; 
-
+ 
     while(!q.empty()){
 
         //saving the top node in queue before popping 
@@ -292,7 +292,8 @@ TreeNode* search(std::array<std::array<int,3>,3>& initial, std::array<std::array
             }
         } 
         cout<<"The best state to expand with a g(n) = "<<q.top()->depth<< " and h(n) = "<< q.top()->cost << " is... "<< endl;
-        display(q.top());    
+        display(q.top());
+        
     } 
     return q.top(); 
 } 
